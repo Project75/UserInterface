@@ -1,21 +1,29 @@
 <!DOCTYPE html>  
  <html>  
       <head>  
-           <title>FHIR Mapping</title>  
-           <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>  
-           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> 
-           <link rel="stylesheet" href="css/style.css"> 
+        <title>FHIR Mapping</title>  
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>  
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> 
+        <link rel="stylesheet" href="css/style.css">
       </head>
+
       <nav >      
         <div align="center">
-           <img src="images/logo_fhir-01.jpg" alt="Fhir logo" >   
-           <h3 >FHIR - HL7 Mapping</h3>         
-        </div>      
+          <img src="images/logo_fhir-01.jpg" alt="Fhir logo" >   
+          <h3 >FHIR - HL7 Mapping</h3>         
+        </div>   
+
     </nav>  
 
       <body ng-app="myapp" ng-controller="f_usercontroller" ng-init="loadFhirMappings()"  > 
 <!-- 1st  screen Login -->
 <!-- 2nd screen Choose existing mapping : List the profile names from the fhir_field table -->
+
+
         <div ng-show = "showFlag == 'showChoose'" class = "container" style="width:600px";>
           <div class = "input-form">  
             <br/>
@@ -26,24 +34,56 @@
                 </select> 
             </div>
             <div>
-                  <input type="submit" name="btnChoose" class="btn btn-info"  ng-click="showForm()" value="Choose"/>
+                <input type="submit" name="btnChoose" class="btn btn-info"  ng-click="showForm()" value="Choose"/>
             </div>
             <br>
 
-           
-            <div align = "center">
-              <!-- <input type="submit" name="btnChoose" class="btn btn-info"  data-target="#inputCreateModal" data-target = "modal" value="Create"/> -->
-              <!-- <button class="btn btn-info"  data-target="#inputCreateModal" data-toggel = "modal">Create</button> -->
-              <!-- <input type="submit" name="btnChoose" class="btn btn-info"  ng-click="showForm()" value="Create"/> -->
+             <div align="center" class="">
+                <!-- <h2>Create Modal for creating Mapping</h2> -->
+                <!-- Trigger the modal with a button -->
+                <button type="button"  class="btn btn-success" data-toggle="modal" data-target="#myModal">Create a new mapping</button>
+
+                <!-- Modal -->
+                <div class="fade modal modal-sm" id="myModal" role="dialog">
+                  <div class="modal-dialog">
+                  
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Enter a mapping name</h4>
+                      </div>
+                      <div class="modal-body">
+                        <!-- <p>Some text in the modal.</p> -->
+                        <input type="text" name="" class="" ng-model="new_mapping_name" value="{{new_mapping_name}}" placeholder="Enter a mapping name" />
+                        <input type="submit" name="btnChoose" class="btn btn-info" data-dismiss="modal" ng-click="createForm()" value="Create"/>
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+                
+              </div>
+<!--             <div align = "center">
+              <input type="submit" name="btnChoose" class="btn btn-info"  ng-click="showForm()" value="Create"/>
               <button class="btn btn-success" ng-click="">Create a new mapping</button>
-            </div>
+            </div> -->
+
             <br>
           </div>
         </div>
+
+
+
+
 <!-- 2nd screen Ends -->
 <!-- 3rd screen starts: Main mapping/editing window -->
 
-          <div class="container" style="width:1200px;" ng-show = "showFlag == 'showForm'"  ng-init="displayData();loadFhirProfiles();">  
+          <div class="container" style="width:1200px;" ng-show = "showFlag == 'showForm'"  ng-init="displayData(); loadFhirProfiles();">  
               <div class = "entry-form">  
                 <br />  
                 <!--3a. Add/ Edit section of the mappings -->
@@ -77,15 +117,24 @@
                             <option ng-repeat="hl7segment in list_hl7segments" value="{{hl7segment.segment_name}}">{{hl7segment.segment_name}}</option>  
                        </select>  
                   </div>
-                  <div class="col-lg-8">                      
-                       <select name="hl7_field" ng-model="hl7_field" class="form-control">  
+                  <div class="col-lg-8" >                      
+                       <select name="hl7_field"  ng-show = "customField != 'newhl7Field'" ng-model="hl7_field" class="form-control" >  
                             <option value="">Select Field</option>  
                             <option ng-repeat="hl7field in list_hl7fields" value="{{hl7field.field_name}}">{{hl7field.field_name}} </option>  
-                       </select>  
+                       </select>
+                      <div class="input-group  " ng-show = "customField == 'newhl7Field'">
+                        <input type="text"  class="form-control " name="" ng-model="new_hl7Segment_name" value="{{new_hl7Segment_name}}" placeholder="Enter SegmentName" />
+                        <span class="input-group-addon"></span>
+                        <input type="text" class="form-control "  name="" ng-model="new_hl7field_name" value="{{new_hl7field_name}}" placeholder="Enter FieldName" />
+                      </div>
+                      <input type="hidden" ng-model="new_field_id" />
+
+
                   </div>
+
                 </div>
                 </div>
-                <!-- <input type="hidden" ng-model="mapping_id" /> -->
+                <input type="hidden" ng-model="mapping_id" />
                 <br>
                 
                 <!-- ADD, Update and Cancel buttons -->
@@ -102,7 +151,7 @@
               </div>
               
               <!-- Displays the list of mappings for a particular mapping_name -->
-              <table class="table">  
+              <table class="table table-striped table-condensed">  
                 <tr>  
                      <th>Mapping_id</th>  
                      <th>Profile</th>  

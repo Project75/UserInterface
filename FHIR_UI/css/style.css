@@ -47,3 +47,30 @@
 .width-field {
 	width: 30%;
 }
+.modal {
+   position: absolute;
+   top: 250px;
+   right: 0px;
+   bottom: 0;
+   left: 500px;
+   z-index: 10040;
+   overflow: auto;
+   overflow-y: auto;
+
+}
+        .modal-dialog {
+          width: 350px; /* New width for default modal */
+        }
+        .modal-sm {
+          width: 350px; /* New width for small modal */
+        }
+
+.form-control{
+  display:inline
+}
+
+.input {
+    background-color: transparent;
+    border: 0px solid;
+
+}
